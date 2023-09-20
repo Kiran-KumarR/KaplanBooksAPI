@@ -1,10 +1,9 @@
 ﻿using BooksAPI.Interface;
 using BooksAPI.Models;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Net;
+
 
 namespace BooksAPI.Services
 {
@@ -593,31 +592,5 @@ namespace BooksAPI.Services
         }
 
 
-
-        /// <summary>
-        /// GetBookId () returns 1 if there are no records else return the maximum  of records
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <returns></returns>
-        public int GetBookId(SqlConnection connection)
-        {
-            string selectMaxBookIdSql = "SELECT MAX(id) FROM Books";
-            SqlCommand selectMaxBookIdCommand = new SqlCommand(selectMaxBookIdSql, connection);
-            connection.Open();
-            var maxId = selectMaxBookIdCommand.ExecuteScalar();
-            if (maxId == DBNull.Value)
-            {
-                return 1;
-            }
-            else
-            {
-                return (int)maxId;
-            }
-
-        }
-
-
-     
-
-    }
+        }   
 }

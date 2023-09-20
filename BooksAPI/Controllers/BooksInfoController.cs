@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BooksAPI.Controllers;
 using BooksAPI.Models;
 using BooksAPI.Interface;
-using System.Net;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace BooksAPI.Controllers
 {
@@ -178,7 +174,7 @@ namespace BooksAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteBook(int id)
         {
-            var deletionResult = _bookService.DeleteBookById( id);//change 
+            var deletionResult = _bookService.DeleteBookById( id);
 
             if (deletionResult!=null)
             {

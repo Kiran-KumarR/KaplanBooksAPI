@@ -1,5 +1,4 @@
 ﻿using BooksAPI.Models;
-using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 
 namespace BooksAPI.Interface
@@ -22,13 +21,10 @@ namespace BooksAPI.Interface
         BookInfoModel DeleteBookById(int id);
 
 
-        int GetBookId(SqlConnection connection);
-
         BookInfoModel PutintoBooksTable(int book_id,BookInfoModel bookInfo);
 
         BookInfoModel PostintoBooksTable(BookInfoModel bookInfo);
 
-     
-
+  
     }
 }

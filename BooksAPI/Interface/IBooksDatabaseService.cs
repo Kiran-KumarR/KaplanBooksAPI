@@ -1,5 +1,4 @@
 ﻿using BooksAPI.Models;
-using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 
 namespace BooksAPI.Interface
@@ -21,7 +20,7 @@ namespace BooksAPI.Interface
         BookInfoModel PutIntoBooks(int book_id, BookInfoModel bookInfo);
 
         BookInfoModel PostIntoBooks(BookInfoModel bookInfo);
-        int GetBookId(SqlConnection connection);
+        
 
         int GetOrCreatePublisherId(SqlConnection connection, string publisher_name);
 

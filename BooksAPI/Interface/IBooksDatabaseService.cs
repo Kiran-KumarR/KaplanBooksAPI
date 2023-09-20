@@ -33,6 +33,5 @@ namespace BooksAPI.Interface
 
         Task<List<BookInfoModel>> RetrieveBooksFromJson();
 
-        SqlConnection CreateSqlConnection();
     }
 }

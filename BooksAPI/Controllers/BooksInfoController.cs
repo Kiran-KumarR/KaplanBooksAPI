@@ -155,6 +155,7 @@ namespace BooksAPI.Controllers
         public IActionResult PutintoBooks(int book_id,BookInfoModel bookInfo)
         {
             var putResult=_bookService.PutintoBooksTable(book_id,bookInfo);
+           
             if (putResult != null)
             {
                 return Ok(putResult);
@@ -162,9 +163,9 @@ namespace BooksAPI.Controllers
             }
             else
             {
-                return NoContent();
+                return NotFound($"Book with ID {book_id} not found.");
             }
-            //return _bookService.PutintoBooks(bookInfo).ToList();
+            
         }
 
 

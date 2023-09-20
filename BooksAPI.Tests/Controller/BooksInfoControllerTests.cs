@@ -4,11 +4,13 @@ using BooksAPI.Controllers;
 using BooksAPI.Interface;
 using BooksAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using BooksAPI.Services;
 using Moq;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit.Sdk;
 using System.Net;
+using Microsoft.Extensions.Configuration;
 
 namespace BooksAPI.Tests.Controllers
 {
@@ -21,10 +23,10 @@ namespace BooksAPI.Tests.Controllers
             var mockBooksInfoService = new Mock<IBooksInfoService>();
             mockBooksInfoService.Setup(x => x.RetrieveBooksFromDatabase()).Returns(new List<BookInfoModel>());
             mockBooksInfoService.Setup(x => x.FetchBooksFromApiAsync()).ReturnsAsync(new List<BookInfoModel>()
-    {
-        new BookInfoModel() {id = 1, title = "Book 1"},
-        new BookInfoModel() {id = 2, title = "Book 2"}
-    });
+            {
+            new BookInfoModel() {id = 1, title = "Book 1"},
+            new BookInfoModel() {id = 2, title = "Book 2"}
+            });
 
             var booksInfoController = new BooksInfoController(mockBooksInfoService.Object);
 
@@ -109,7 +111,8 @@ namespace BooksAPI.Tests.Controllers
         }
 
 
-        // Tests the GetAllBooks() method when the JSON file fails.
+        // Tests the GetAllBooks() method when all data sources fail.
+       
         [Fact]
         public async Task GetAllBooks_WhenAllDataSourcesFail_ShouldReturnEmptyList()
         {
@@ -117,6 +120,7 @@ namespace BooksAPI.Tests.Controllers
             var mockBooksInfoService = new Mock<IBooksInfoService>();
             mockBooksInfoService.Setup(x => x.RetrieveBooksFromDatabase()).Returns(new List<BookInfoModel>());
             mockBooksInfoService.Setup(x => x.FetchBooksFromApiAsync()).ThrowsAsync(new Exception("API failed"));
+            mockBooksInfoService.Setup(x => x.RetrieveBooksFromJson()).ThrowsAsync(new Exception("JSON failed"));
 
             // Create a mock `BooksInfoController` object.
             var mockBooksInfoController = new Mock<BooksInfoController>(mockBooksInfoService.Object);
@@ -127,6 +131,7 @@ namespace BooksAPI.Tests.Controllers
             // Assert
             mockBooksInfoService.Verify(x => x.RetrieveBooksFromDatabase(), Times.Once());
             mockBooksInfoService.Verify(x => x.FetchBooksFromApiAsync(), Times.Once());
+            mockBooksInfoService.Verify(x => x.RetrieveBooksFromJson(), Times.Once());
 
             // Verify that the result is an OkObjectResult object with an empty list of books.
             var okObjectResult = result as OkObjectResult;
@@ -135,8 +140,9 @@ namespace BooksAPI.Tests.Controllers
         }
 
         //GetBooksbyId when BookExists
+        // Corrected test method
         [Fact]
-        public async Task GetBooksById_WhenBookExists_ShouldReturnBookInfoModel()
+        public async Task GetBooksById_WhenBookExists_ShouldReturnOkObjectResultWithBookInfoModel()
         {
             // Arrange
             var mockBookDatabaseService = new Mock<IBooksDatabaseService>();
@@ -158,22 +164,24 @@ namespace BooksAPI.Tests.Controllers
 
             // Mock the `IBooksInfoService` interface.
             var mockBooksInfoService = new Mock<IBooksInfoService>();
+
+            // Use ReturnsAsync to return a completed Task with the desired result.
             mockBooksInfoService.Setup(x => x.GetBookById(1)).Returns(mockBookDatabaseService.Object.RetrieveBookByIdFromDatabase(1));
 
-            // Create a mock `BooksInfoController` object.
-            var mockBooksInfoController = new Mock<BooksInfoController>(mockBooksInfoService.Object);
+            // Create a real `BooksInfoController` object (not a mock) using the mocked services.
+            var booksInfoController = new BooksInfoController(mockBooksInfoService.Object);
 
             // Act
-            var result =mockBooksInfoController.Object.GetBooks(1);
+            var result = booksInfoController.GetBooks(1);
 
             // Assert
-            mockBooksInfoService.Verify(x => x.GetBookById(1), Times.Once());
+            // Assert that the result is an OkObjectResult.
+            Assert.IsType<OkObjectResult>(result);
 
-            // Assert that the result is a BookInfoModel object.
-            Assert.IsType<BookInfoModel>(result);
+            // Assert that the OkObjectResult contains the expected book.
+            var okObjectResult = result as OkObjectResult;
+            var book = okObjectResult.Value as BookInfoModel;
 
-            // Assert that the BookInfoModel object contains the expected book.
-            var book = result as BookInfoModel;
             Assert.NotNull(book);
             Assert.Equal(1, book.id);
             Assert.Equal("Test Book", book.title);
@@ -189,7 +197,7 @@ namespace BooksAPI.Tests.Controllers
             Assert.Equal("Acme Publishing", book.publisher_name);
         }
 
-
+        //GetBooksbyId when BookDoesNotExists
         [Fact]
         public async Task GetBookById_WhenBookDoesNotExist_ShouldReturnNull()
         {
@@ -228,7 +236,9 @@ namespace BooksAPI.Tests.Controllers
             Assert.Null(result);
         }
 
-
-
+     
     }
-}
+
+        
+    }
+

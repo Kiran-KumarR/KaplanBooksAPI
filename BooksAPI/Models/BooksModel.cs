@@ -27,7 +27,6 @@ namespace BooksAPI.Models
 
         public int pageCount { get; set; }
 
-        public string categories { get; set; }
 
         public decimal retailPrice { get; set; }
     }

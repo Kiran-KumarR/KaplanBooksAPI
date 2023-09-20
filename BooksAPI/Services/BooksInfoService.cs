@@ -1,9 +1,7 @@
 ﻿using BooksAPI.Interface;
 using BooksAPI.Models;
-using Newtonsoft.Json;
 using System.Data.SqlClient;
-using System.Data;
-using Microsoft.AspNetCore.Mvc;
+
 
 namespace BooksAPI.Services
 {
@@ -34,16 +32,6 @@ namespace BooksAPI.Services
             return _databaseService.RetrieveBookByIdFromDatabase(id);
         }
 
-
-        /// <summary>
-        /// GetBookId method returns an method of IBooksDatabaseService
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <returns></returns>
-        public int GetBookId(SqlConnection  connection)
-        {
-            return _databaseService.GetBookId(connection);
-        }
 
 
         /// <summary>

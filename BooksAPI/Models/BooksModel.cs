@@ -1,6 +1,4 @@
-﻿using System.Drawing.Printing;
-
-namespace BooksAPI.Models
+﻿namespace BooksAPI.Models
 {
     public class BooksModel
     {

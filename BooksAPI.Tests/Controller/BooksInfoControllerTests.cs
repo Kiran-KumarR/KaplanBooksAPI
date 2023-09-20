@@ -1,23 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
-using BooksAPI.Controllers;
+﻿using BooksAPI.Controllers;
 using BooksAPI.Interface;
 using BooksAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using BooksAPI.Services;
 using Moq;
-using Xunit;
-using Microsoft.Extensions.DependencyInjection;
-using Xunit.Sdk;
-using System.Net;
-using Microsoft.Extensions.Configuration;
+
 
 namespace BooksAPI.Tests.Controllers
 {
     public class BooksInfoControllerTests
     {
         [Fact]
-        public async Task GetAllBooks_WhenDatabaseIsEmpty_ShouldReturnBooksFromApi()
+        public async Task GetAllBooks_ShouldReturnBooksFromApi_WhenDatabaseIsEmpty()
         {
             // Arrange
             var mockBooksInfoService = new Mock<IBooksInfoService>();
@@ -43,7 +36,7 @@ namespace BooksAPI.Tests.Controllers
 
         // Tests the GetAllBooks() method when the database is empty.
         [Fact]
-        public async Task GetAllBooks_WhenDatabaseIsEmpty_ShouldReturnNotFoundObjectResult()
+        public async Task GetAllBooks_ShouldReturnNotFoundObjectResult_WhenDatabaseIsEmpty()
         {
             // Arrange
             var mockBooksInfoService = new Mock<IBooksInfoService>();
@@ -62,7 +55,7 @@ namespace BooksAPI.Tests.Controllers
 
         // Tests the GetAllBooks() method when the database is not empty.
         [Fact]
-        public async Task GetAllBooks_WhenDatabaseIsNotEmpty_ShouldReturnBooksFromDatabase()
+        public async Task GetAllBooks_ShouldReturnBooksFromDatabase_WhenDatabaseIsNotEmpty()
         {
             // Arrange
             var mockBooksInfoService = new Mock<IBooksInfoService>();
@@ -88,7 +81,7 @@ namespace BooksAPI.Tests.Controllers
 
         // Tests the GetAllBooks() method when the API fails.
         [Fact]
-        public async Task GetAllBooks_WhenApiFails_ShouldReturnEmptyList()
+        public async Task GetAllBooks_ShouldReturnEmptyList_WhenApiFails()
         {
             // Arrange
             var mockBooksInfoService = new Mock<IBooksInfoService>();
@@ -114,7 +107,7 @@ namespace BooksAPI.Tests.Controllers
         // Tests the GetAllBooks() method when all data sources fail.
        
         [Fact]
-        public async Task GetAllBooks_WhenAllDataSourcesFail_ShouldReturnEmptyList()
+        public async Task GetAllBooks_ShouldReturnEmptyList_WhenAllDataSourcesFail()
         {
             // Arrange
             var mockBooksInfoService = new Mock<IBooksInfoService>();
@@ -142,7 +135,7 @@ namespace BooksAPI.Tests.Controllers
         //GetBooksbyId when BookExists
         // Corrected test method
         [Fact]
-        public async Task GetBooksById_WhenBookExists_ShouldReturnOkObjectResultWithBookInfoModel()
+        public async Task GetBooksById_ShouldReturnOkObjectResultWithBookInfoModel_WhenBookExists()
         {
             // Arrange
             var mockBookDatabaseService = new Mock<IBooksDatabaseService>();
@@ -199,7 +192,7 @@ namespace BooksAPI.Tests.Controllers
 
         //GetBooksbyId when BookDoesNotExists
         [Fact]
-        public async Task GetBookById_WhenBookDoesNotExist_ShouldReturnNull()
+        public async Task GetBookById_ShouldReturnNull_WhenBookDoesNotExist()
         {
             // Arrange
             var mockBooksDatabaseService = new Mock<IBooksDatabaseService>();

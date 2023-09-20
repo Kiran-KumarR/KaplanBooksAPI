@@ -98,9 +98,9 @@ namespace BooksAPI.Services
         /// </summary>
         /// <param name="bookInfo"></param>
         /// <returns></returns>
-        public BookInfoModel PutintoBooksTable(BookInfoModel bookInfo)
+        public BookInfoModel PutintoBooksTable(int book_id, BookInfoModel bookInfo)
         {
-            return _databaseService.PutIntoBooks(bookInfo);
+            return _databaseService.PutIntoBooks(book_id,bookInfo);
         }
 
 
@@ -141,9 +141,9 @@ namespace BooksAPI.Services
         /// </summary>
         /// <param name="jsonFilePath"></param>
         /// <returns></returns>
-        public Task<List<BookInfoModel>> RetrieveBooksFromJson(string jsonFilePath)
+        public Task<List<BookInfoModel>> RetrieveBooksFromJson()
         {
-            return _databaseService.RetrieveBooksFromJson(jsonFilePath);
+            return _databaseService.RetrieveBooksFromJson();
         }
 
 

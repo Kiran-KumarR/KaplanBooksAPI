@@ -163,14 +163,14 @@ namespace BooksAPI.Services
         /// </summary>
         /// <param name="bookInfo"></param>
         /// <returns></returns>
-        public BookInfoModel PutIntoBooks(BookInfoModel bookInfo)
+        public BookInfoModel PutIntoBooks(int book_id, BookInfoModel bookInfo)
         {
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
             SqlConnection sqlConnection = new SqlConnection(connectionString);
-
+            sqlConnection.Open();
             List<BookInfoModel> list = new List<BookInfoModel>();
 
-            int bookId = GetBookId(sqlConnection);
+            
             int authId = GetOrCreateAuthorId(sqlConnection, bookInfo.author_name);
             int pubId = GetOrCreatePublisherId(sqlConnection, bookInfo.publisher_name);
 
@@ -186,7 +186,7 @@ namespace BooksAPI.Services
         "retailPrice = ISNULL(@RetailPrice, retailPrice) " +
         "WHERE id = @Id;", sqlConnection);  //SELECT * FROM Author WHERE auth_id = @id
 
-            sqlCommand.Parameters.AddWithValue("@Id", bookId);
+            sqlCommand.Parameters.AddWithValue("@Id", book_id);
             sqlCommand.Parameters.AddWithValue("@Title", bookInfo.title);
             sqlCommand.Parameters.AddWithValue("@Author_ID", authId);
             sqlCommand.Parameters.AddWithValue("@Publisher_ID", pubId);
@@ -199,14 +199,14 @@ namespace BooksAPI.Services
             sqlCommand.Parameters.AddWithValue("@PageCount", bookInfo.pageCount);
             sqlCommand.Parameters.AddWithValue("@PublishedDate", bookInfo.publishedDate);
             sqlCommand.Parameters.AddWithValue("@RetailPrice", bookInfo.retailPrice);
-
+          
 
             sqlCommand.ExecuteNonQuery();
             sqlConnection.Close();
 
             var book = new BookInfoModel
             {
-                id = bookId,
+                id = book_id,
                 title = bookInfo.title,
                 auth_id = authId,
                 pub_id = pubId,
@@ -214,7 +214,9 @@ namespace BooksAPI.Services
                 language = bookInfo.language,
                 maturityRating = bookInfo.maturityRating,
                 publishedDate = bookInfo.publishedDate,
-                retailPrice = bookInfo.retailPrice
+                retailPrice = bookInfo.retailPrice,
+                author_name=bookInfo.author_name,
+                publisher_name=bookInfo.publisher_name
             }; return book;
         }
 
@@ -383,8 +385,8 @@ namespace BooksAPI.Services
                 else
                 {
                     Console.WriteLine($"API request failed with status code: {response.StatusCode}");
-                    var jsonFile = @"C:\Users\KKumarR\Desktop\BooksAPI\BooksAPI\Database\kaplan_book.json";
-                    await RetrieveBooksFromJson(jsonFile);
+                  
+                    await RetrieveBooksFromJson();
                     // check comment
                 }
             }
@@ -403,10 +405,11 @@ namespace BooksAPI.Services
         /// </summary>
         /// <param name="jsonFilePath"></param>
         /// <returns></returns>
-        public async Task<List<BookInfoModel>> RetrieveBooksFromJson(string jsonFilePath)
+        public async Task<List<BookInfoModel>> RetrieveBooksFromJson()
         {
             try
             {
+                var jsonFilePath = "C:\\Users\\KKumarR\\Desktop\\KaplanBooksAPI\\BooksAPI\\Database\\kaplan_book.json";
                 using (StreamReader reader = new StreamReader(jsonFilePath))
                 {
                     var jsonString = reader.ReadToEnd();
@@ -606,6 +609,13 @@ namespace BooksAPI.Services
         }
 
 
+     
+            public SqlConnection CreateSqlConnection()
+            {
+                // Your implementation here
+                return new SqlConnection("DefaultConnection");
+            }
+        
 
     }
 }

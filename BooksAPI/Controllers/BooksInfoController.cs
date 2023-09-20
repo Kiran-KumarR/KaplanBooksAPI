@@ -13,13 +13,11 @@ namespace BooksAPI.Controllers
     public class BooksInfoController : ControllerBase
     {
 
-        private readonly IConfiguration _configuration;
         private readonly IBooksInfoService _bookService;
       
 
-        public BooksInfoController(IConfiguration configuration, IBooksInfoService bookService)
+        public BooksInfoController( IBooksInfoService bookService)
         {
-            _configuration = configuration;
             _bookService = bookService;
         
         }
@@ -34,14 +32,22 @@ namespace BooksAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllBooks([FromQuery] bool seed = true)
         {
-            if (seed)
+            try
             {
-                return await GetAllBooksWhenSeeding();//if seed if true
+                if (seed)
+                {
+                    return await GetAllBooksWhenSeeding();//if seed if true
+                }
+                else
+                {
+                    return await GetAllBooksWhenNotSeeding();//if seed is false
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return await GetAllBooksWhenNotSeeding();//if seed is false
+                return NotFound();
             }
+           
         }
         private async Task<IActionResult> GetAllBooksWhenSeeding()
         {
@@ -51,7 +57,7 @@ namespace BooksAPI.Controllers
             {
                 // Database is empty, try fetching from API
                 var booksFromApi = await _bookService.FetchBooksFromApiAsync();
-
+              
                 if (booksFromApi != null && booksFromApi.Count > 0)
                 {
                     await _bookService.StoreBooksInDatabase(booksFromApi);
@@ -60,8 +66,8 @@ namespace BooksAPI.Controllers
                 else
                 {
                     // API failed, try fetching from local JSON file
-                    var jsonFile = @"C:\Users\KKumarR\Desktop\BooksAPI\BooksAPI\Database\kaplan_book.json";
-                    var booksFromJson = await _bookService.RetrieveBooksFromJson(jsonFile);
+                
+                    var booksFromJson = await _bookService.RetrieveBooksFromJson();
 
                     if (booksFromJson != null && booksFromJson.Count > 0)
                     {
@@ -131,13 +137,12 @@ namespace BooksAPI.Controllers
             var postResult = _bookService.PostintoBooksTable(bookInfo);
             if (postResult != null)
             {
-                return Ok(postResult);
+                return Ok($"Insert is sucessfull for Book_ID {postResult.id} ");
             }
             else
             {
                 return NoContent();
             }
-            //return _bookService.PostBooks( bookInfo).ToList();
         }
 
         /// <summary>
@@ -146,10 +151,10 @@ namespace BooksAPI.Controllers
         /// <param name="bookInfo"></param>
         /// <returns></returns>
         // PUT api/<BooksInfoController>/5
-        [HttpPut("{id}")]
-        public IActionResult PutintoBooks(BookInfoModel bookInfo)
+        [HttpPut("{book_id}")]
+        public IActionResult PutintoBooks(int book_id,BookInfoModel bookInfo)
         {
-            var putResult=_bookService.PutintoBooksTable(bookInfo);
+            var putResult=_bookService.PutintoBooksTable(book_id,bookInfo);
             if (putResult != null)
             {
                 return Ok(putResult);

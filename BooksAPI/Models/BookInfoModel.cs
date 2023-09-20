@@ -6,6 +6,7 @@
 
         public int id { get; set; }
 
+        public string message { get; set; }
         public string title { get; set; }
 
         public int  auth_id { get; set; }
@@ -22,7 +23,6 @@
 
         public int  pageCount { get; set; }
 
-        public string categories { get; set; }
 
         public string publishedDate { get; set; }
 
@@ -31,5 +31,7 @@
         public int author_id {  get; set; }
 
         public int publisher_id {  get; set; }
+
+      
     }
 }

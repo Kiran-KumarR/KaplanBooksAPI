@@ -15,12 +15,12 @@ CREATE TABLE Books (
     author_id INT,
     publisher_id INT,
     description VARCHAR(1000),
-    FOREIGN KEY (author_id) REFERENCES Author(auth_id),
-    FOREIGN KEY (publisher_id) REFERENCES Publisher(pub_id),
-     language VARCHAR(20),
+    language VARCHAR(20),
     maturityRating VARCHAR(30),
     pageCount INT,
     publishedDate VARCHAR(50),
-    retailPrice DECIMAL(6, 3)
+    retailPrice DECIMAL(6, 3),
+    FOREIGN KEY (author_id) REFERENCES Author(auth_id),
+    FOREIGN KEY (publisher_id) REFERENCES Publisher(pub_id)
 );
 

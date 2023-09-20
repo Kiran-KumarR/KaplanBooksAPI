@@ -169,8 +169,16 @@ namespace BooksAPI.Services
             SqlConnection sqlConnection = new SqlConnection(connectionString);
             sqlConnection.Open();
             List<BookInfoModel> list = new List<BookInfoModel>();
-
             
+            SqlCommand checkBookCommand = new SqlCommand("SELECT COUNT(*) FROM Books WHERE id = @Id;", sqlConnection);
+            checkBookCommand.Parameters.AddWithValue("@Id", book_id);
+            int bookCount = (int)checkBookCommand.ExecuteScalar();
+            if (bookCount == 0)
+            {
+                Console.WriteLine($"Book ID {book_id}  not found");
+                return new BookInfoModel { id = book_id, message = $" Book ID {book_id} not found " };
+            }
+
             int authId = GetOrCreateAuthorId(sqlConnection, bookInfo.author_name);
             int pubId = GetOrCreatePublisherId(sqlConnection, bookInfo.publisher_name);
 
@@ -610,12 +618,6 @@ namespace BooksAPI.Services
 
 
      
-            public SqlConnection CreateSqlConnection()
-            {
-                // Your implementation here
-                return new SqlConnection("DefaultConnection");
-            }
-        
 
     }
 }

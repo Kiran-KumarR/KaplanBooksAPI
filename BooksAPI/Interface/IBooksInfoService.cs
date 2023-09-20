@@ -10,7 +10,7 @@ namespace BooksAPI.Interface
     public interface IBooksInfoService
     {
         Task<List<BookInfoModel>> FetchBooksFromApiAsync();
-        Task<List<BookInfoModel>> RetrieveBooksFromJson(string jsonFilePath);
+        Task<List<BookInfoModel>> RetrieveBooksFromJson();
 
         List<BookInfoModel> RetrieveBooksFromDatabase();
         Task StoreBooksInDatabase(List<BookInfoModel> bookInfos);
@@ -24,7 +24,7 @@ namespace BooksAPI.Interface
 
         int GetBookId(SqlConnection connection);
 
-        BookInfoModel PutintoBooksTable(BookInfoModel bookInfo);
+        BookInfoModel PutintoBooksTable(int book_id,BookInfoModel bookInfo);
 
         BookInfoModel PostintoBooksTable(BookInfoModel bookInfo);
 

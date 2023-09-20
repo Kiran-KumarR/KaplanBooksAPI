@@ -18,7 +18,7 @@ namespace BooksAPI.Interface
         Task<List<BookInfoModel>> FetchBooksFromApiAsync();
 
       
-        BookInfoModel PutIntoBooks(BookInfoModel bookInfo);
+        BookInfoModel PutIntoBooks(int book_id, BookInfoModel bookInfo);
 
         BookInfoModel PostIntoBooks(BookInfoModel bookInfo);
         int GetBookId(SqlConnection connection);
@@ -31,6 +31,8 @@ namespace BooksAPI.Interface
 
         Task StoreBooksInDatabase(List<BookInfoModel> bookInfos);
 
-        Task<List<BookInfoModel>> RetrieveBooksFromJson(string jsonFilePath);
+        Task<List<BookInfoModel>> RetrieveBooksFromJson();
+
+        SqlConnection CreateSqlConnection();
     }
 }
